@@ -1,0 +1,17 @@
+#!/bin/bash
+
+salir() {
+	rm /rootpasswd.txt /usr/local/bin/root-passwd
+	systemctl disable root-passwd.service
+	rm /etc/systemd/system/root-passwd.service
+
+}
+
+PASSWD=`cat /rootpasswd.txt`
+if [[ -z $(cat /rootpasswd.txt) ]]; then
+	salir
+	exit
+fi
+
+echo "root:$PASSWD" | chpasswd
+salir

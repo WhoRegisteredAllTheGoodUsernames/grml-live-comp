@@ -1,0 +1,12 @@
+[Unit]
+Type=oneshot
+Description=Cambia la contraseña del usuario root
+After=grml-autoconfig.service
+Wants=grml-autoconfig.service
+
+[Service]
+ExecStart=/usr/local/bin/root-passwd
+
+[Install]
+WantedBy=default.target
+

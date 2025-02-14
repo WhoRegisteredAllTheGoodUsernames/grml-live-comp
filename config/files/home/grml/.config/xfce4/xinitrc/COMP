@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ -f "$HOME/.i18n" ]; then
+	. "$HOME/.i18n"
+fi
+
+export $(dbus-launch)
+
+gsettings set org.gnome.gedit.preferences.editor scheme 'oblivion'
+xfconf-query -c xsettings -p /Net/ThemeName -s Greybird-dark
+xfconf-query -c xsettings -p /Net/IconThemeName -s elementary-xfce-dark
+xfconf-query -c xfce4-panel --create --type string -p /plugins/plugin-1 -s whiskermenu
+xfconf-query -c xfce4-keyboard-shortcuts --create --type string -p /commands/custom/Super_L -s xfce4-popup-whiskermenu
+xdg-settings set default-web-browser netsurf-gtk.desktop
+
+. /etc/xdg/xfce4/xinitrc

@@ -1,0 +1,101 @@
+PACKAGES install
+
+grml-paste
+grml-quickconfig-standard
+
+# base os
+apt
+bsdextrautils
+bsdutils
+dctrl-tools
+dos2unix
+findutils
+htop
+libnss-myhostname
+locales
+lsof
+mount
+ntpsec-ntpdate
+passwd
+procps
+psmisc
+sudo
+sysvinit-utils
+tree
+tzdata
+util-linux
+localepurge
+
+# filesystem support
+attr
+dosfstools
+e2fsprogs
+f2fs-tools
+
+# networking
+net-tools
+netbase
+curl
+gpg
+ca-certificates
+
+# packers/unpackers
+cpio
+tar
+unp
+unzip
+zip
+
+# shell
+bash
+coreutils
+nnn
+screen
+tmux
+zsh
+
+# X
+grml-x
+xfwm4
+xfce4-panel
+xfce4-session
+xfce4-terminal
+xfce4-whiskermenu-plugin
+xfce4-places-plugin
+xfce4-taskmanager
+mate-calc
+greybird-gtk-theme
+elementary-xfce-icon-theme
+thunar
+netsurf-gtk
+zathura
+polkitd
+xdg-user-dirs
+dbus-x11
+libglib2.0-bin
+
+# editores
+sublime-text
+code
+emacs-gtk
+vim-gtk3
+gedit
+codeblocks
+
+# coding
+gcc-multilib
+g++-multilib
+default-jre
+default-jdk
+python-is-python3
+
+PACKAGES install I386
+linux-image-686
+memtest86+
+
+PACKAGES install AMD64
+linux-image-amd64
+memtest86+
+
+PACKAGES install ARM64
+linux-image-arm64

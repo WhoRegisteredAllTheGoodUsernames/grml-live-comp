@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -u
+set -e
+
+# FAI sets $target, but shellcheck does not know that.
+target=${target:?}
+
+# shellcheck source=/dev/null
+. "$GRML_LIVE_CONFIG"
+
+fcopy /usr/local/bin/update-iptables
+fcopy /etc/systemd/system/update-iptables.service
+
+fcopy /usr/local/bin/root-passwd
+fcopy /etc/systemd/system/root-passwd.service
+
+$ROOTCMD systemctl enable update-iptables.service
+$ROOTCMD systemctl enable root-passwd.service
+
+touch "$target"/{credenciales.txt,whitelist.txt}

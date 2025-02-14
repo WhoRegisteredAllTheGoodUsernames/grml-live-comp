@@ -1,0 +1,29 @@
+#!/bin/bash
+
+sleep 5
+
+iptables -F
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+
+if [[ -z $(cat /whitelist.txt) ]]; then
+	exit
+fi
+
+MAIN=$(cat /whitelist.txt | head -n 1)
+
+[[ ! -e /home/grml/.config/netsurf ]] && mkdir -p /home/grml/.config/netsurf
+echo "homepage_url:$MAIN" > /home/grml/.config/netsurf/Choices
+chown -R grml:grml /home/grml/.config/netsurf
+
+iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 53 -j ACCEPT
+
+while read -r line; do
+	iptables -A OUTPUT -d "$line" -p tcp --dport 80 -j ACCEPT
+	iptables -A OUTPUT -d "$line" -p tcp --dport 443 -j ACCEPT
+	iptables -A OUTPUT -d "www.$line" -p tcp --dport 80 -j ACCEPT
+	iptables -A OUTPUT -d "www.$line" -p tcp --dport 443 -j ACCEPT
+done </whitelist.txt
+
+iptables -P OUTPUT DROP

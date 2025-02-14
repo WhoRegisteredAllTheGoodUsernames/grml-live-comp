@@ -1,0 +1,11 @@
+[Unit]
+Description=Actualiza las iptables con los dominios bloqueados.
+After=network-online.service
+Wants=network-online.service
+
+[Service]
+ExecStart=/usr/local/bin/update-iptables
+
+[Install]
+WantedBy=default.target
+

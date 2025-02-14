@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -u
+set -e
+
+. "$GRML_LIVE_CONFIG"
+
+fcopy -M -v /etc/locale.conf
+
+$ROOTCMD dpkg-reconfigure -f noninteractive localepurge
+$ROOTCMD localepurge
+$ROOTCMD locale-gen

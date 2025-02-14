@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export GRML_FAI_CONFIG=$(pwd)/config
+export SCRIPTS_DIRECTORY=$(pwd)/scripts
+export LIVE_CONF=$(pwd)/etc/grml/grml-live.conf
+export TEMPLATE_DIRECTORY=$(pwd)/templates
+export FAI_DEBOOTSTRAP_OPTS="--exclude=info,tasksel,tasksel-data,isc-dhcp-client,isc-dhcp-common --include=aptitude,apt-transport-https,ca-certificates --arch amd64 testing /home/paula/Documents/grml-live/grml/grml_chroot http://deb.debian.org/debian"
+export DISTRI_NAME="grml-custom"
+
+./grml-live -g grml-custom -r grml-custom -A -D $(pwd)/config -t $(pwd)/templates -c GRMLBASE,AMD64,COMP,OVERRIDE_GRML

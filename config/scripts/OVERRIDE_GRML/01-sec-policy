@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -u
+set -e
+
+. "$GRML_LIVE_CONFIG"
+
+# Desactiva los permisos sudo para el usuario por defecto
+
+sed -i "s/$USERNAME/# $USERNAME/" "$target"/etc/sudoers.d/user-nopasswd
+
+# Cambia la cantidad de TTYs disponibles
+
+# sed -i "s/NAutoVTs=12/NAutoVTs=2/" "$target"/etc/systemd/logind.conf.d/grml.conf
+
+# Hace autologin del usuario sin permisos sudo en sólo la TTY 1
+
+BASETTY="$target"/etc/systemd/system/getty@tty5.service.d/override.conf
+basefile () {
+	echo "$target"/etc/systemd/system/getty@tty"$1".service.d/override.conf
+}
+
+mv -f $BASETTY $(basefile 1)
+
+# Elimina el resto de autologins
+
+for i in {2..7}; do rm -rf $(basefile $i); done
+for i in {10..12}; do rm -rf $(basefile $i); done
+
+$ROOTCMD systemctl disable debug-shell
+$ROOTCMD systemctl mask debug-shell

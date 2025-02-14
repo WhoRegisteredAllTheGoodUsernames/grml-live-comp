@@ -1,0 +1,3 @@
+export LANGUAGE=es_CL.utf8
+export LANG=es_CL.utf8
+export LC_all=es_CL.utf8
