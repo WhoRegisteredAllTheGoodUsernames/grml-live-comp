@@ -9,4 +9,4 @@ target=${target:?}
 # shellcheck source=/dev/null
 . "$GRML_LIVE_CONFIG"
 
-fcopy -r -c COMP /home/grml
+fcopy -r /home/grml

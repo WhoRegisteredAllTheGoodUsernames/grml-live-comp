@@ -211,6 +211,12 @@ def install_packages_for_classes(
 ):
     """Run equivalent of "instsoft" task: set debconf selections and install packages listed in package lists."""
 
+    print("I: Mounting /proc for correct functioning of apt")
+    run_chrooted(
+        chroot_dir,
+        ["mount", "-t", "proc", "/proc", "proc"],
+    )
+
     # debconf is not Essential. Ensure it is installed, so we can use debconf-set-selections.
     chrooted_apt_install(chroot_dir, ["debconf"])
 
@@ -237,6 +243,12 @@ def install_packages_for_classes(
         file.write("# List of packages installed by minifai\n")
         file.write("\n".join(full_package_list.list_for_arch(dpkg_architecture)))
         file.write("\n")
+
+    print("I: Unounting /proc")
+    run_chrooted(
+        chroot_dir,
+        ["umount", "proc"],
+    )
 
 
 def show_env(log_text: str, env):
@@ -567,7 +579,7 @@ def install_base(conf_dir: Path, chroot_dir: Path, classes, debian_suite: str, m
     print(f'I: Installing Debian base system for suite "{debian_suite}" using mmdebstrap')
 
     # Work around APT bug: http://bugs.debian.org/1092164
-    included_packages = ["netbase"]
+    included_packages = ["netbase", "ca-certificates", "apt-transport-https"]
 
     # Allow using https:// mirror, if given.
     if mirror_url.startswith("https"):
