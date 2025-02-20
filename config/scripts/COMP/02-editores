@@ -12,7 +12,7 @@ target=${target:?}
 # Instala NetBeans y limpia
 
 echo "  [I] COMP: Se copia paquete de NetBeans a chroot."
-cp ../../netbeans.deb "$target"
+cp ./netbeans.deb "$target"
 $ROOTCMD chown root:root netbeans.deb
 
 $ROOTCMD apt install ./netbeans.deb
@@ -26,7 +26,7 @@ $ROOTCMD apt autoremove -y
 if [[ $(ifclass VEXT) ]]; then
 	echo "  [I] COMP: Se instalarán las extensiones de VS Code."
 	$ROOTCMD mkdir /home/grml/exts
-	cp ../../extensiones/* "$target"/home/grml/exts
+	cp ./extensiones/* "$target"/home/grml/exts
 	$ROOTCMD chown -R root:root /home/grml/exts
 
 	INSTALL="--user-data-dir /home/grml/.vscode --no-sandbox --extensions-dir /home/grml/.vscode/extensions --install-extension"
