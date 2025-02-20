@@ -40,7 +40,7 @@ if [[ ! -e ./config/bootstrap-keyring/COMP || $llavesNuevas -ne 0 ]]; then
 	rm -f ./config/bootstrap-keyring/COMP
 
 	for editor in "${!editores[@]}"; do
-		cat "./${editores[$editor]}" >> ./config/bootstrap-keyring/COMP
+		cat "./config/files/etc/apt/trusted.gpg.d/${editores[$editor]}/COMP" >> ./config/bootstrap-keyring/COMP
 	done
 fi
 
