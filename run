@@ -6,4 +6,54 @@ export LIVE_CONF=$(pwd)/etc/grml/grml-live.conf
 export TEMPLATE_DIRECTORY=$(pwd)/templates
 export DISTRI_NAME="grml-custom"
 
-./grml-live -g grml-custom -r grml-custom -A -D $(pwd)/config -t $(pwd)/templates -c GRMLBASE,AMD64,COMP,OVERRIDE_GRML
+clases="GRMLBASE,AMD64,COMP,OVERRIDE_GRML"
+
+declare -A editores
+
+editores[VSCode]="packages.microsoft.gpg"
+editores[SublimeText]="sublimehq-pub.gpg"
+
+declare -i llavesNuevas=0
+
+for editor in "${!editores[@]}"; do
+	llave="${editores[$editor]}"
+	
+	if [[ ! -e "./config/files/etc/apt/trusted.gpg.d/$llave/COMP" ]]; then
+		if [[ -e "./$llave" ]]; then
+			echo "  [I] Copiando llave $llave a los archivos del sistema."
+
+			llavesNuevas=1
+			mkdir -p "./config/files/etc/apt/trusted.gpg.d/$llave/"
+			cp "./$llave" "./config/files/etc/apt/trusted.gpg.d/$llave/COMP"
+		else
+			echo "  [E] COMP: Falta la llave para el repositorio de $editor ($llave). Abortando."
+			exit 1
+		fi
+	else
+		echo "  [I] COMP: La llave para el repositorio de $editor ya está instalada."
+	fi
+done
+
+
+if [[ ! -e ./config/bootstrap-keyring/COMP || $llavesNuevas -ne 0 ]]; then
+	echo "  [I] COMP: Creando llavero."
+	rm -f ./config/bootstrap-keyring/COMP
+
+	for editor in "${!editores[@]}"; do
+		cat "./${editores[$editor]}" >> ./config/bootstrap-keyring/COMP
+	done
+fi
+
+if [[ ! -e ./netbeans.deb ]]; then
+	echo "  [E] COMP: No está disponible el paquete para NetBeans (netbeans.deb). Abortando."
+	exit 1
+else
+	echo "  [I] COMP: Se encontró paquete para NetBeans."
+fi
+
+if [[ -e ./extensiones/ && $(find ./extensiones/ -maxdepth 1 -name '*.vsix') ]]; then
+	echo "  [I] COMP: Se encontraron extensiones para VS Code."
+	clases="${clases},VEXT"
+fi
+
+./grml-live -g grml-custom -r grml-custom -A -D $(pwd)/config -t $(pwd)/templates -c "$clases"

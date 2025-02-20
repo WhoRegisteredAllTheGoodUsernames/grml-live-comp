@@ -9,16 +9,11 @@ target=${target:?}
 # shellcheck source=/dev/null
 . "$GRML_LIVE_CONFIG"
 
-# Descarga NetBeans (si no está el paquete), lo instala y limpia
+# Instala NetBeans y limpia
 
-if [[ -e ../../netbeans.deb ]]; then
-	echo "COMP: Paquete netbeans.deb encontrado. Se copia a chroot."
-	cp ../../netbeans.deb "$target"
-	$ROOTCMD chown root:root netbeans.deb
-else
-	echo "COMP: No se encontró paquete netbeans.deb. Se descarga NetBeans 24."
-	$ROOTCMD curl https://dlcdn.apache.org/netbeans/netbeans-installers/24/apache-netbeans_24-1_all.deb -o netbeans.deb
-fi
+echo "  [I] COMP: Se copia paquete de NetBeans a chroot."
+cp ../../netbeans.deb "$target"
+$ROOTCMD chown root:root netbeans.deb
 
 $ROOTCMD apt install ./netbeans.deb
 $ROOTCMD apt clean
@@ -28,8 +23,8 @@ $ROOTCMD apt autoremove -y
 
 # Copia las extensiones al chroot, las instala y limpia
 
-if [[ -e ../../extensiones ]]; then
-	echo "COMP: Se encontró directorio de extensiones. Se instalan."
+if [[ $(ifclass VEXT) ]]; then
+	echo "  [I] COMP: Se instalarán las extensiones de VS Code."
 	$ROOTCMD mkdir /home/grml/exts
 	cp ../../extensiones/* "$target"/home/grml/exts
 	$ROOTCMD chown -R root:root /home/grml/exts
@@ -38,6 +33,4 @@ if [[ -e ../../extensiones ]]; then
 
 	$ROOTCMD find /home/grml/exts -iname '*.vsix' -exec code $INSTALL {} \;
 	$ROOTCMD rm -rf /home/grml/exts
-else
-	echo "COMP: No se encontraron extensiones."
 fi
